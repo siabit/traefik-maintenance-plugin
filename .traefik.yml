@@ -1,0 +1,8 @@
+displayName: Maintenance Page
+summary: Show visitors a maintenance page.
+iconPath: assets/icon.png
+type: middleware
+import: github.com/siabit/traefik-maintenance-plugin
+
+testData:
+  enabled: true
