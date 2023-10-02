@@ -6,8 +6,9 @@ import (
 )
 
 type Config struct {
-	Enabled      bool `yaml:"enabled"`
-	BypassSecret string `yaml:"bypassSecret"`
+	Enabled      bool     `yaml:"enabled"`
+	BypassSecret string   `yaml:"bypassSecret"`
+	WhitelistIps []string `yaml:"whitelistIps"`
 }
 
 type Maintenance struct {
@@ -29,7 +30,6 @@ func CreateConfig() *Config {
 	}
 }
 
-
 func New(_ context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
 	//go Inform(config)
 
@@ -42,7 +42,7 @@ func New(_ context.Context, next http.Handler, config *Config, name string) (htt
 
 func (a *Maintenance) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
-	if !a.config.Enabled || a.bypassingHeaders(req) {
+	if !a.config.Enabled || a.bypassingHeaders(req) || a.clientIpIsWhitelisted(req) {
 		rw := &responseWriter{ResponseWriter: w}
 		a.next.ServeHTTP(rw, req)
 
@@ -111,4 +111,14 @@ func getMaintenanceTemplate() []byte {
 
 func (a *Maintenance) bypassingHeaders(r *http.Request) bool {
 	return r.Header.Get("X-Maintenance-Bypass") == a.config.BypassSecret
+}
+
+func (a *Maintenance) clientIpIsWhitelisted(r *http.Request) bool {
+	for _, ip := range a.config.WhitelistIps {
+		if ip == r.RemoteAddr || ip == r.Header.Get("X-Forwarded-For") {
+			return true
+		}
+	}
+
+	return false
 }
