@@ -101,6 +101,7 @@ func getMaintenanceTemplate() []byte {
 <body>
 <article>
 	<h1>Under maintenance</h1>
+	<p><strong>Infos:</strong> <a target="_blank" href="https://siabit.ch/updates/">Updates - siabit AG</a></p>
 	<p>Wir sind gerade dabei, unsere Infrastruktur zu aktualisieren und zu verbessern. Diese Website wird bald wieder verfügbar sein!</p>
 	<p>Nous sommes en train de mettre à jour et d'améliorer notre infrastructure. Ce site sera bientôt de retour !</p>
 	<p>We're currently updating and improving our infrastructure. This website will be back soon!</p>
